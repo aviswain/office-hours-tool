@@ -1,0 +1,11 @@
+#root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+  border-inline: none;
+}
+
+button {
+  font-family: inherit;
+}
