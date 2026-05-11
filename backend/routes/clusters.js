@@ -21,14 +21,16 @@ router.get('/:sessionId', async (req, res) => {
 
     const clusters = await Promise.all(clustersResult.rows.map(async (cluster) => {
       const questionsResult = await pool.query(
-        `SELECT id, student_name, question_text, submitted_at
+        `SELECT id, student_name, question_text, upvotes, submitted_at
          FROM questions WHERE cluster_id = $1`,
         [cluster.id]
       );
+      const totalUpvotes = questionsResult.rows.reduce((sum, q) => sum + (q.upvotes || 0), 0);
       return {
         ...cluster,
         questions: questionsResult.rows,
-        questionCount: questionsResult.rows.length
+        questionCount: questionsResult.rows.length,
+        totalUpvotes,
       };
     }));
 

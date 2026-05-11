@@ -139,6 +139,8 @@ function TA() {
   const [reclustering, setReclustering] = useState(false)
   const [reclusterError, setReclusterError] = useState('')
 
+  const [exporting, setExporting] = useState(false)
+
   const [resolveState, setResolveState] = useState({})
   const [expandedClusters, setExpandedClusters] = useState({})
 
@@ -187,6 +189,32 @@ function TA() {
       }
     }
   }, [])
+
+  const handleExportSummary = async () => {
+    setExporting(true)
+    try {
+      const res = await fetch(`${API_URL}/api/sessions/${SESSION_ID}/summary`)
+      if (!res.ok) {
+        const detail = await extractServerError(res)
+        showToast(`Export failed — ${detail}`)
+        return
+      }
+      const { markdown } = await res.json()
+      const blob = new Blob([markdown], { type: 'text/markdown' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `office-hours-summary-${new Date().toISOString().slice(0, 10)}.md`
+      a.click()
+      URL.revokeObjectURL(url)
+      showToast('Summary downloaded.')
+    } catch (err) {
+      const message = err instanceof Error && err.message ? err.message : String(err)
+      showToast(`Export failed — ${message}`)
+    } finally {
+      setExporting(false)
+    }
+  }
 
   const showToast = (message) => {
     setToast(message)
@@ -381,6 +409,25 @@ function TA() {
           </span>
           <button
             type="button"
+            onClick={handleExportSummary}
+            disabled={exporting || resolvedClusters.length === 0}
+            className="oh-btn oh-btn--secondary oh-btn--sm"
+            title={resolvedClusters.length === 0 ? 'Resolve some clusters first' : 'Download AI-generated session summary'}
+          >
+            {exporting ? (
+              <>
+                <span className="oh-spinner oh-spinner--accent" aria-hidden="true" />
+                <span>Generating…</span>
+              </>
+            ) : (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export summary</span>
+              </>
+            )}
+          </button>
+          <button
+            type="button"
             onClick={handleRecluster}
             disabled={reclustering}
             className="oh-btn oh-btn--primary oh-btn--sm"
@@ -461,6 +508,12 @@ function TA() {
                       <span className="oh-badge__dot" />
                       {studentLabel}
                     </span>
+                    {cluster.totalUpvotes > 0 && (
+                      <span className="oh-badge oh-badge--neutral" title="Total upvotes across questions in this cluster">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
+                        {cluster.totalUpvotes}
+                      </span>
+                    )}
                     {cluster.is_resolved && (
                       <span className="oh-badge oh-badge--success">
                         <CheckIcon size={12} />
