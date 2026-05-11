@@ -9,3 +9,40 @@
 button {
   font-family: inherit;
 }
+
+@keyframes oh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.oh-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: oh-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+.oh-spinner--accent {
+  border: 2px solid rgba(170, 59, 255, 0.25);
+  border-top-color: #aa3bff;
+}
+
+@keyframes oh-skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.oh-skeleton {
+  background: #ececef;
+  border-radius: 4px;
+  animation: oh-skeleton-pulse 1.4s ease-in-out infinite;
+}
