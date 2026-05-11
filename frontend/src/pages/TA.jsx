@@ -32,6 +32,104 @@ async function extractServerError(res) {
   return trimmed ? `${statusLine} — ${trimmed}` : statusLine
 }
 
+function CheckIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  )
+}
+
+function AlertIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+  )
+}
+
+function SparkleIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3v3M12 18v3M5 12H2M22 12h-3M6.34 6.34l-2.12-2.12M19.78 19.78l-2.12-2.12M17.66 6.34l2.12-2.12M4.22 19.78l2.12-2.12" />
+    </svg>
+  )
+}
+
+function ChevronIcon({ open }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{
+        transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+        transition: 'transform 0.2s ease',
+      }}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  )
+}
+
+function TrashIcon({ size = 14 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </svg>
+  )
+}
+
 function TA() {
   const [clusters, setClusters] = useState([])
   const [unclustered, setUnclustered] = useState([])
@@ -232,170 +330,6 @@ function TA() {
     }
   }
 
-  const containerStyle = {
-    maxWidth: 880,
-    margin: '0 auto',
-    textAlign: 'left',
-  }
-
-  const sectionHeadingStyle = {
-    fontSize: 20,
-    fontWeight: 600,
-    margin: '32px 0 12px',
-    color: '#333',
-  }
-
-  const primaryButtonStyle = (disabled) => ({
-    padding: '10px 18px',
-    fontSize: 15,
-    background: disabled ? '#c98bff' : '#aa3bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 4,
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 8,
-  })
-
-  const secondaryButtonStyle = (disabled) => ({
-    padding: '8px 14px',
-    fontSize: 14,
-    background: disabled ? '#eee' : '#fff',
-    color: '#333',
-    border: '1px solid #ccc',
-    borderRadius: 4,
-    cursor: disabled ? 'not-allowed' : 'pointer',
-  })
-
-  const resolveButtonStyle = (disabled) => ({
-    padding: '8px 16px',
-    background: disabled ? '#bdbdbd' : '#aa3bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 4,
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    fontSize: 14,
-  })
-
-  const clusterCardStyle = (resolved) => ({
-    border: `1.5px solid ${resolved ? '#7fc97f' : '#9ec0f4'}`,
-    background: resolved ? '#f3fbf3' : '#f6faff',
-    borderRadius: 8,
-    padding: '16px 20px',
-    marginBottom: 14,
-  })
-
-  const cardHeaderStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: 12,
-    flexWrap: 'wrap',
-  }
-
-  const labelStyle = {
-    fontSize: 17,
-    fontWeight: 600,
-    color: '#1a1a1a',
-    margin: 0,
-  }
-
-  const badgeStyle = {
-    display: 'inline-block',
-    padding: '3px 10px',
-    background: '#e6f0ff',
-    color: '#1e4fa3',
-    border: '1px solid #9ec0f4',
-    borderRadius: 999,
-    fontSize: 12,
-    fontWeight: 600,
-    whiteSpace: 'nowrap',
-  }
-
-  const resolvedBadgeStyle = {
-    ...badgeStyle,
-    background: '#e6f7e6',
-    color: '#1d6f1d',
-    border: '1px solid #8fd28f',
-  }
-
-  const questionListStyle = {
-    margin: '12px 0 0',
-    padding: '12px 14px',
-    background: '#fff',
-    border: '1px solid #e5e4e7',
-    borderRadius: 4,
-    listStyle: 'none',
-  }
-
-  const questionItemStyle = {
-    padding: '6px 0',
-    borderBottom: '1px solid #f0eef3',
-    fontSize: 14,
-    color: '#333',
-  }
-
-  const studentNameStyle = {
-    fontWeight: 600,
-    color: '#555',
-    marginRight: 8,
-  }
-
-  const toggleLinkStyle = {
-    background: 'none',
-    border: 'none',
-    color: '#1e4fa3',
-    cursor: 'pointer',
-    fontSize: 13,
-    padding: 0,
-    marginTop: 8,
-  }
-
-  const textareaStyle = {
-    width: '100%',
-    padding: '8px 10px',
-    fontSize: 15,
-    border: '1px solid #ccc',
-    borderRadius: 4,
-    boxSizing: 'border-box',
-    fontFamily: 'inherit',
-    resize: 'vertical',
-  }
-
-  const resolvedAnswerBoxStyle = {
-    marginTop: 12,
-    padding: '12px 14px',
-    background: '#fff',
-    border: '1px solid #d6f5d6',
-    borderRadius: 4,
-    color: '#1d6f1d',
-    whiteSpace: 'pre-wrap',
-  }
-
-  const errorTextStyle = {
-    color: '#c0392b',
-    fontSize: 14,
-    marginTop: 8,
-  }
-
-  const unclusteredCardStyle = {
-    border: '1px solid #e5e4e7',
-    borderRadius: 6,
-    padding: '12px 16px',
-    marginBottom: 10,
-    background: '#fff',
-    fontSize: 14,
-  }
-
-  const sessionLogCardStyle = {
-    border: '1px solid #d6f5d6',
-    background: '#f3fbf3',
-    borderRadius: 6,
-    padding: '14px 18px',
-    marginBottom: 12,
-  }
-
   const skeletonLine = (width, height = 14, marginBottom = 10) => (
     <div
       className="oh-skeleton"
@@ -406,73 +340,110 @@ function TA() {
 
   const renderSkeleton = () => (
     <div>
-      {skeletonLine(220, 24, 18)}
       {[0, 1, 2].map((i) => (
         <div
           key={i}
           style={{
-            border: '1px solid #ececef',
-            borderRadius: 8,
-            padding: '16px 20px',
+            border: '1px solid var(--gray-200)',
+            background: '#fff',
+            borderRadius: 'var(--radius-lg)',
+            padding: '22px 24px',
             marginBottom: 14,
+            boxShadow: 'var(--shadow-sm)',
           }}
         >
-          {skeletonLine('60%', 18)}
-          {skeletonLine('30%', 12)}
+          {skeletonLine('55%', 18, 14)}
+          {skeletonLine('28%', 12, 16)}
           {skeletonLine('100%', 12)}
-          {skeletonLine('90%', 12, 0)}
+          {skeletonLine('92%', 12, 0)}
         </div>
       ))}
     </div>
   )
 
   const resolvedClusters = clusters.filter((c) => c.is_resolved)
+  const activeClusters = clusters
+  const showActiveCount = !initialLoading && !fetchError && activeClusters.length > 0
+  const showUnclusteredCount = !initialLoading && !fetchError && unclustered.length > 0
+  const showResolvedCount = !initialLoading && !fetchError && resolvedClusters.length > 0
 
   return (
-    <div style={containerStyle}>
-      <h1 style={{ marginTop: 0 }}>TA Dashboard</h1>
+    <div className="oh-container">
+      <header className="oh-hero">
+        <div className="oh-hero__copy">
+          <span className="oh-hero__eyebrow">
+            <span aria-hidden="true">⌘</span> Teaching assistant
+          </span>
+          <h1 className="oh-hero__title">TA Dashboard</h1>
+          <p className="oh-hero__subtitle">
+            Review grouped questions, post a single answer, and clear the queue faster
+            than ever.
+          </p>
+        </div>
+        <span className="oh-live-pill" title={`Polling every ${POLL_INTERVAL_MS / 1000}s`}>
+          <span className="oh-live-pill__dot" />
+          Live · updates every {POLL_INTERVAL_MS / 1000}s
+        </span>
+      </header>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+      <div className="oh-toolbar">
         <button
           type="button"
           onClick={handleRecluster}
           disabled={reclustering}
-          style={primaryButtonStyle(reclustering)}
+          className="oh-btn oh-btn--primary"
         >
-          {reclustering && <span className="oh-spinner" aria-hidden="true" />}
-          <span>{reclustering ? 'AI is grouping questions...' : 'Re-cluster Questions'}</span>
+          {reclustering ? (
+            <>
+              <span className="oh-spinner" aria-hidden="true" />
+              <span>AI is grouping questions…</span>
+            </>
+          ) : (
+            <>
+              <SparkleIcon />
+              <span>Re-cluster questions</span>
+            </>
+          )}
         </button>
         {reclusterError && (
-          <span role="alert" style={{ color: '#c0392b', fontSize: 14 }}>
+          <span role="alert" style={{ color: 'var(--danger-700)', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <AlertIcon size={14} />
             {reclusterError}
           </span>
         )}
       </div>
 
-      <h2 style={sectionHeadingStyle}>Active Clusters</h2>
+      <div className="oh-section-head">
+        <h2 className="oh-section-head__title">Active clusters</h2>
+        {showActiveCount && (
+          <span className="oh-section-head__count">{activeClusters.length}</span>
+        )}
+        <span className="oh-section-head__line" />
+      </div>
 
       {initialLoading && renderSkeleton()}
 
       {!initialLoading && fetchError && (
-        <div
-          role="alert"
-          style={{
-            border: '1px solid #f5c6cb',
-            background: '#fdecea',
-            borderRadius: 6,
-            padding: '14px 18px',
-            color: '#c0392b',
-          }}
-        >
-          <p style={{ margin: '0 0 10px' }}>{fetchError}</p>
-          <button type="button" onClick={handleRetry} style={secondaryButtonStyle(false)}>
+        <div role="alert" className="oh-alert oh-alert--danger" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+            <span className="oh-alert__icon">
+              <AlertIcon />
+            </span>
+            <span>{fetchError}</span>
+          </div>
+          <button type="button" onClick={handleRetry} className="oh-btn oh-btn--secondary oh-btn--sm" style={{ alignSelf: 'flex-start' }}>
             Retry
           </button>
         </div>
       )}
 
       {!initialLoading && !fetchError && clusters.length === 0 && (
-        <p style={{ color: '#888' }}>No clusters yet.</p>
+        <div className="oh-empty">
+          <div className="oh-empty__icon" aria-hidden="true">
+            <SparkleIcon size={18} />
+          </div>
+          No clusters yet. Submitted questions will appear here once grouped.
+        </div>
       )}
 
       {!initialLoading &&
@@ -484,16 +455,23 @@ function TA() {
           const studentLabel = `${count} ${count === 1 ? 'student' : 'students'}`
 
           return (
-            <div key={cluster.id} style={clusterCardStyle(cluster.is_resolved)}>
-              <div style={cardHeaderStyle}>
+            <div
+              key={cluster.id}
+              className={`oh-cluster${cluster.is_resolved ? ' oh-cluster--resolved' : ''}`}
+            >
+              <div className="oh-cluster__header">
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3 style={labelStyle}>{cluster.label || 'Untitled cluster'}</h3>
-                  <div style={{ marginTop: 6, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <span style={cluster.is_resolved ? resolvedBadgeStyle : badgeStyle}>
+                  <h3 className="oh-cluster__title">{cluster.label || 'Untitled cluster'}</h3>
+                  <div className="oh-cluster__meta">
+                    <span className={`oh-badge ${cluster.is_resolved ? 'oh-badge--success' : 'oh-badge--brand'}`}>
+                      <span className="oh-badge__dot" />
                       {studentLabel}
                     </span>
                     {cluster.is_resolved && (
-                      <span style={resolvedBadgeStyle}>Resolved</span>
+                      <span className="oh-badge oh-badge--success">
+                        <CheckIcon size={12} />
+                        Resolved
+                      </span>
                     )}
                   </div>
                 </div>
@@ -501,7 +479,7 @@ function TA() {
                   type="button"
                   onClick={() => openResolve(cluster.id)}
                   disabled={cluster.is_resolved || state.open}
-                  style={resolveButtonStyle(cluster.is_resolved || state.open)}
+                  className={`oh-btn ${cluster.is_resolved ? 'oh-btn--secondary' : 'oh-btn--primary'} oh-btn--sm`}
                 >
                   {cluster.is_resolved ? 'Resolved' : 'Resolve'}
                 </button>
@@ -512,22 +490,20 @@ function TA() {
                   <button
                     type="button"
                     onClick={() => toggleExpanded(cluster.id)}
-                    style={toggleLinkStyle}
+                    className="oh-toggle-link"
                   >
-                    {isExpanded ? 'Hide questions' : `Show ${count} ${count === 1 ? 'question' : 'questions'}`}
+                    <ChevronIcon open={isExpanded} />
+                    <span className="oh-toggle-link__text">
+                      {isExpanded
+                        ? 'Hide questions'
+                        : `Show ${count} ${count === 1 ? 'question' : 'questions'}`}
+                    </span>
                   </button>
                   {isExpanded && (
-                    <ul style={questionListStyle}>
-                      {cluster.questions.map((q, idx) => (
-                        <li
-                          key={q.id}
-                          style={{
-                            ...questionItemStyle,
-                            borderBottom:
-                              idx === cluster.questions.length - 1 ? 'none' : questionItemStyle.borderBottom,
-                          }}
-                        >
-                          <span style={studentNameStyle}>{q.student_name}:</span>
+                    <ul className="oh-question-list oh-fade-in">
+                      {cluster.questions.map((q) => (
+                        <li key={q.id} className="oh-question-list__item">
+                          <span className="oh-question-list__name">{q.student_name}:</span>
                           <span>{q.question_text}</span>
                         </li>
                       ))}
@@ -537,37 +513,51 @@ function TA() {
               )}
 
               {state.open && !cluster.is_resolved && (
-                <div style={{ marginTop: 14 }}>
-                  <label
-                    htmlFor={`answer-${cluster.id}`}
-                    style={{ display: 'block', fontWeight: 500, marginBottom: 6, color: '#333' }}
-                  >
-                    Your answer:
+                <div style={{ marginTop: 16 }} className="oh-fade-in">
+                  <label className="oh-label" htmlFor={`answer-${cluster.id}`}>
+                    Your answer
                   </label>
                   <textarea
                     id={`answer-${cluster.id}`}
+                    className="oh-textarea"
                     rows={4}
+                    placeholder="Write a clear, concise answer for the whole cluster…"
                     value={state.answer || ''}
                     onChange={(e) => handleResolveChange(cluster.id, e.target.value)}
                     disabled={state.submitting}
-                    style={textareaStyle}
                   />
-                  {state.error && <p style={errorTextStyle}>{state.error}</p>}
-                  <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                  {state.error && (
+                    <div role="alert" className="oh-alert oh-alert--danger" style={{ marginTop: 10 }}>
+                      <span className="oh-alert__icon">
+                        <AlertIcon size={14} />
+                      </span>
+                      <span>{state.error}</span>
+                    </div>
+                  )}
+                  <div style={{ marginTop: 12, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     <button
                       type="button"
                       onClick={() => handleConfirmAnswer(cluster)}
                       disabled={state.submitting}
-                      style={primaryButtonStyle(state.submitting)}
+                      className="oh-btn oh-btn--success"
                     >
-                      {state.submitting && <span className="oh-spinner" aria-hidden="true" />}
-                      <span>{state.submitting ? 'Saving…' : 'Confirm Answer'}</span>
+                      {state.submitting ? (
+                        <>
+                          <span className="oh-spinner" aria-hidden="true" />
+                          <span>Saving…</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckIcon size={14} />
+                          <span>Confirm answer</span>
+                        </>
+                      )}
                     </button>
                     <button
                       type="button"
                       onClick={() => cancelResolve(cluster.id)}
                       disabled={state.submitting}
-                      style={secondaryButtonStyle(state.submitting)}
+                      className="oh-btn oh-btn--ghost"
                     >
                       Cancel
                     </button>
@@ -576,42 +566,62 @@ function TA() {
               )}
 
               {cluster.is_resolved && cluster.answer && (
-                <div style={resolvedAnswerBoxStyle}>
-                  <span style={{ marginRight: 8, fontWeight: 700 }}>✓</span>
-                  {cluster.answer}
+                <div className="oh-answer-block" style={{ marginTop: 14 }}>
+                  <span className="oh-answer-block__icon">
+                    <CheckIcon size={16} />
+                  </span>
+                  <span>{cluster.answer}</span>
                 </div>
               )}
             </div>
           )
         })}
 
-      <h2 style={sectionHeadingStyle}>Unclustered Questions</h2>
+      <div className="oh-section-head">
+        <h2 className="oh-section-head__title">Unclustered questions</h2>
+        {showUnclusteredCount && (
+          <span className="oh-section-head__count">{unclustered.length}</span>
+        )}
+        <span className="oh-section-head__line" />
+      </div>
+
       {!initialLoading && !fetchError && unclustered.length === 0 && (
-        <p style={{ color: '#888' }}>No unclustered questions</p>
+        <div className="oh-empty">No unclustered questions — everything is grouped.</div>
       )}
+
       {!initialLoading &&
         !fetchError &&
         unclustered.map((q) => (
-          <div key={q.id} style={unclusteredCardStyle}>
-            <span style={studentNameStyle}>{q.student_name}:</span>
+          <div key={q.id} className="oh-unclustered">
+            <span className="oh-question-list__name">{q.student_name}:</span>
             <span>{q.question_text}</span>
           </div>
         ))}
 
-      <h2 style={sectionHeadingStyle}>Session Log — Resolved Questions</h2>
+      <div className="oh-section-head">
+        <h2 className="oh-section-head__title">Session log — resolved</h2>
+        {showResolvedCount && (
+          <span className="oh-section-head__count">{resolvedClusters.length}</span>
+        )}
+        <span className="oh-section-head__line" />
+      </div>
+
       {!initialLoading && !fetchError && resolvedClusters.length === 0 && (
-        <p style={{ color: '#888' }}>No resolved clusters yet.</p>
+        <div className="oh-empty">No resolved clusters yet.</div>
       )}
+
       {!initialLoading &&
         !fetchError &&
         resolvedClusters.map((cluster) => (
-          <div key={cluster.id} style={sessionLogCardStyle}>
-            <div style={{ fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>
+          <div key={cluster.id} className="oh-cluster oh-cluster--resolved">
+            <div style={{ fontWeight: 600, color: 'var(--gray-900)', marginBottom: 6, letterSpacing: '-0.012em' }}>
               {cluster.label || 'Untitled cluster'}
             </div>
-            <div style={{ whiteSpace: 'pre-wrap', color: '#1d6f1d' }}>
-              <span style={{ marginRight: 8, fontWeight: 700 }}>✓</span>
-              {cluster.answer}
+            <div className="oh-answer-block">
+              <span className="oh-answer-block__icon">
+                <CheckIcon size={16} />
+              </span>
+              <span>{cluster.answer}</span>
             </div>
           </div>
         ))}
@@ -620,41 +630,25 @@ function TA() {
         type="button"
         onClick={handleResetDemo}
         disabled={resetting}
-        style={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          padding: '6px 12px',
-          fontSize: 12,
-          color: '#666',
-          background: '#f1f1f1',
-          border: '1px solid #d6d6d6',
-          borderRadius: 4,
-          cursor: resetting ? 'not-allowed' : 'pointer',
-          opacity: resetting ? 0.7 : 0.9,
-          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-        }}
+        className="oh-reset-fab"
+        title="Reset all questions for this demo session"
       >
-        {resetting ? 'Resetting…' : 'Reset Demo'}
+        {resetting ? (
+          <>
+            <span className="oh-spinner oh-spinner--accent" aria-hidden="true" />
+            <span>Resetting…</span>
+          </>
+        ) : (
+          <>
+            <TrashIcon />
+            <span>Reset demo</span>
+          </>
+        )}
       </button>
 
       {toast && (
-        <div
-          role="status"
-          style={{
-            position: 'fixed',
-            bottom: 60,
-            right: 16,
-            padding: '10px 16px',
-            background: '#1a1a1a',
-            color: '#fff',
-            borderRadius: 6,
-            fontSize: 14,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-            maxWidth: 320,
-          }}
-        >
-          {toast}
+        <div role="status" className="oh-toast">
+          <span>{toast}</span>
         </div>
       )}
     </div>
