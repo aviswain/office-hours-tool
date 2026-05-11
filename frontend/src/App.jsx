@@ -10,9 +10,9 @@ function BrandMark() {
           fill="white"
           fillOpacity="0.95"
         />
-        <circle cx="9" cy="10.5" r="1.15" fill="#4F46E5" />
-        <circle cx="12" cy="10.5" r="1.15" fill="#4F46E5" />
-        <circle cx="15" cy="10.5" r="1.15" fill="#4F46E5" />
+        <circle cx="9" cy="10.5" r="1.15" fill="#2563eb" />
+        <circle cx="12" cy="10.5" r="1.15" fill="#2563eb" />
+        <circle cx="15" cy="10.5" r="1.15" fill="#2563eb" />
       </svg>
     </span>
   )

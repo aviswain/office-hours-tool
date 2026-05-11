@@ -185,22 +185,14 @@ function Student() {
     ? clusters.find((c) => c.id === submittedQuestion.cluster_id)
     : null
 
-  const resolvedQuestions = questions.filter((q) => q.is_resolved)
+  const resolvedClusters = clusters.filter((c) => c.is_resolved)
   const atMaxLength = questionText.length >= MAX_QUESTION_LENGTH
 
   return (
     <div className="oh-container oh-container--narrow">
-      <header className="oh-hero">
-        <div className="oh-hero__copy">
-          <span className="oh-hero__eyebrow">
-            <span aria-hidden="true">✦</span> Live office-hours queue
-          </span>
-          <h1 className="oh-hero__title">Ask a question.</h1>
-          <p className="oh-hero__subtitle">
-            Your TA will see it instantly. Similar questions are grouped together so
-            you get answers faster.
-          </p>
-        </div>
+      <header className="oh-page-header">
+        <h1 className="oh-page-header__title">Ask a question</h1>
+        <p className="oh-page-header__desc">Your TA will see it instantly. Similar questions are grouped for faster replies.</p>
       </header>
 
       {!submittedQuestionId && (
@@ -349,11 +341,13 @@ function Student() {
 
       <div className="oh-section-head">
         <h2 className="oh-section-head__title">Already answered</h2>
-        <span className="oh-section-head__count">{resolvedQuestions.length}</span>
+        {resolvedClusters.length > 0 && (
+          <span className="oh-section-head__count">{resolvedClusters.length}</span>
+        )}
         <span className="oh-section-head__line" />
       </div>
 
-      {resolvedQuestions.length === 0 ? (
+      {resolvedClusters.length === 0 ? (
         <div className="oh-empty">
           <div className="oh-empty__icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -363,21 +357,27 @@ function Student() {
           No answered questions yet. Check back after your TA responds.
         </div>
       ) : (
-        resolvedQuestions.map((q) => {
-          const cluster = clusters.find((c) => c.id === q.cluster_id)
+        resolvedClusters.map((cluster) => {
+          const clusterQuestions = questions.filter((q) => q.cluster_id === cluster.id)
           return (
-            <div key={q.id} className="oh-resolved-card">
-              <div className="oh-resolved-card__question">{q.question_text}</div>
-              {cluster?.answer ? (
+            <div key={cluster.id} className="oh-resolved-card">
+              <div className="oh-resolved-card__label">{cluster.label}</div>
+              {cluster.answer && (
                 <div className="oh-answer-block" style={{ marginTop: 12 }}>
                   <span className="oh-answer-block__icon">
                     <CheckIcon size={16} />
                   </span>
                   <span>{cluster.answer}</span>
                 </div>
-              ) : (
-                <div style={{ marginTop: 8, color: 'var(--gray-500)', fontSize: 13 }}>
-                  Answer not yet available.
+              )}
+              {clusterQuestions.length > 0 && (
+                <div className="oh-resolved-card__questions">
+                  {clusterQuestions.map((q) => (
+                    <div key={q.id} className="oh-resolved-card__q-item">
+                      <span className="oh-question-list__name">{q.student_name}:</span>
+                      <span>{q.question_text}</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
