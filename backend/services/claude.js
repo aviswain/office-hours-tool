@@ -66,3 +66,38 @@ Rules:
 
   return safeClusters;
 }
+
+export async function generateSummary(clusters) {
+  if (clusters.length === 0) {
+    return '# Office Hours Summary\n\nNo questions were answered this session.';
+  }
+
+  const prompt = `You are summarizing a CS office hours session for students to keep as a reference.
+
+Here are the questions and answers from the session:
+
+${clusters.map((c, i) => `### Topic ${i + 1}: ${c.label}
+Student questions (${c.questions.length}):
+${c.questions.map(q => `- ${q.student_name}: "${q.question_text}"`).join('\n')}
+TA answer: ${c.answer}`).join('\n\n')}
+
+Write a clean markdown study guide from this session. For each topic use exactly this structure:
+
+## [Topic title]
+
+**TA's answer:** [quote the TA's answer verbatim here]
+
+**Explanation:** [expand on the TA's answer with a clearer, fuller explanation of the underlying concept]
+
+Then end the document with a brief "## Key Takeaways" bullet list.
+Start the document with "# Office Hours Summary" and one sentence describing what was covered overall.
+
+Output only the markdown. No preamble or meta-commentary.`;
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: prompt,
+  });
+
+  return response.text.trim();
+}

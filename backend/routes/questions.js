@@ -32,12 +32,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/questions/:sessionId — for your partner to read questions for clustering
+// GET /api/questions/:sessionId
 router.get('/:sessionId', async (req, res) => {
   const { sessionId } = req.params;
   try {
     const result = await pool.query(
-      `SELECT id, student_name, question_text, cluster_id, is_resolved, submitted_at
+      `SELECT id, student_name, question_text, cluster_id, is_resolved, upvotes, submitted_at
        FROM questions WHERE session_id = $1 ORDER BY submitted_at ASC`,
       [sessionId]
     );
@@ -45,6 +45,38 @@ router.get('/:sessionId', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch questions' });
+  }
+});
+
+// POST /api/questions/:questionId/upvote
+router.post('/:questionId/upvote', async (req, res) => {
+  const { questionId } = req.params;
+  try {
+    const result = await pool.query(
+      `UPDATE questions SET upvotes = upvotes + 1 WHERE id = $1 RETURNING upvotes`,
+      [questionId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    res.json({ upvotes: result.rows[0].upvotes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to upvote' });
+  }
+});
+
+// POST /api/questions/:questionId/downvote
+router.post('/:questionId/downvote', async (req, res) => {
+  const { questionId } = req.params;
+  try {
+    const result = await pool.query(
+      `UPDATE questions SET upvotes = GREATEST(upvotes - 1, 0) WHERE id = $1 RETURNING upvotes`,
+      [questionId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    res.json({ upvotes: result.rows[0].upvotes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to remove upvote' });
   }
 });
 

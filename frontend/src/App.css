@@ -1084,6 +1084,68 @@
   flex-wrap: wrap;
 }
 
+/* ============================================================
+   Active queue cards (Student page)
+   ============================================================ */
+.oh-queue-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--shadow-xs);
+}
+
+.oh-queue-card__body {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--gray-700);
+  line-height: 1.5;
+}
+
+.oh-queue-card__text {
+  display: inline;
+}
+
+.oh-upvote-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  line-height: 1;
+}
+
+.oh-upvote-btn:hover:not(:disabled) {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+  color: var(--brand-700);
+}
+
+.oh-upvote-btn--voted {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+  color: var(--brand-700);
+  cursor: default;
+}
+
+.oh-upvote-btn:disabled {
+  cursor: default;
+}
+
 /* Resolved questions inside a resolved-card */
 .oh-resolved-card__label {
   font-weight: 600;

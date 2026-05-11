@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import pool from '../db/supabase.js';
-import { clusterQuestions } from '../services/claude.js';
+import { clusterQuestions, generateSummary } from '../services/claude.js';
 
 const router = Router();
 
@@ -72,6 +72,32 @@ router.post('/:sessionId/cluster', async (req, res) => {
       message: err.message,
       retryable: true
     });
+  }
+});
+
+// GET /api/sessions/:sessionId/summary
+router.get('/:sessionId/summary', async (req, res) => {
+  const { sessionId } = req.params;
+  try {
+    const clustersResult = await pool.query(
+      `SELECT id, label, answer FROM clusters
+       WHERE session_id = $1 AND is_resolved = true ORDER BY resolved_at ASC`,
+      [sessionId]
+    );
+
+    const clusters = await Promise.all(clustersResult.rows.map(async (cluster) => {
+      const questionsResult = await pool.query(
+        `SELECT student_name, question_text FROM questions WHERE cluster_id = $1`,
+        [cluster.id]
+      );
+      return { ...cluster, questions: questionsResult.rows };
+    }));
+
+    const markdown = await generateSummary(clusters);
+    res.json({ markdown });
+  } catch (err) {
+    console.error('Summary error:', err.message);
+    res.status(500).json({ error: 'Failed to generate summary', message: err.message });
   }
 });
 

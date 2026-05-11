@@ -98,6 +98,7 @@ function Student() {
   const [errorMessage, setErrorMessage] = useState('')
   const [questions, setQuestions] = useState([])
   const [clusters, setClusters] = useState([])
+  const [upvoted, setUpvoted] = useState(new Set())
 
   const intervalRef = useRef(null)
 
@@ -177,6 +178,27 @@ function Student() {
     }
   }
 
+  const handleUpvote = async (questionId) => {
+    const alreadyVoted = upvoted.has(questionId)
+    setUpvoted((prev) => {
+      const next = new Set(prev)
+      alreadyVoted ? next.delete(questionId) : next.add(questionId)
+      return next
+    })
+    setQuestions((prev) =>
+      prev.map((q) =>
+        q.id === questionId
+          ? { ...q, upvotes: Math.max(0, (q.upvotes || 0) + (alreadyVoted ? -1 : 1)) }
+          : q
+      )
+    )
+    try {
+      await fetch(`${API_URL}/api/questions/${questionId}/${alreadyVoted ? 'downvote' : 'upvote'}`, { method: 'POST' })
+    } catch (err) {
+      console.warn('[Student] upvote toggle failed:', err)
+    }
+  }
+
   const submittedQuestion = submittedQuestionId
     ? questions.find((q) => q.id === submittedQuestionId)
     : null
@@ -186,6 +208,7 @@ function Student() {
     : null
 
   const resolvedClusters = clusters.filter((c) => c.is_resolved)
+  const activeQuestions = questions.filter((q) => !q.is_resolved)
   const atMaxLength = questionText.length >= MAX_QUESTION_LENGTH
 
   return (
@@ -337,6 +360,40 @@ function Student() {
             )}
           </div>
         </div>
+      )}
+
+      <div className="oh-section-head">
+        <h2 className="oh-section-head__title">Active queue</h2>
+        {activeQuestions.length > 0 && (
+          <span className="oh-section-head__count">{activeQuestions.length}</span>
+        )}
+        <span className="oh-section-head__line" />
+      </div>
+
+      {activeQuestions.length === 0 ? (
+        <div className="oh-empty">No questions in the queue yet.</div>
+      ) : (
+        activeQuestions.map((q) => {
+          const isOwn = q.id === submittedQuestionId
+          const hasUpvoted = upvoted.has(q.id)
+          return (
+            <div key={q.id} className="oh-queue-card">
+              <div className="oh-queue-card__body">
+                <span className="oh-question-list__name">{q.student_name}:</span>
+                <span className="oh-queue-card__text">{q.question_text}</span>
+              </div>
+              <button
+                className={`oh-upvote-btn${hasUpvoted ? ' oh-upvote-btn--voted' : ''}`}
+                onClick={() => !isOwn && handleUpvote(q.id)}
+                disabled={isOwn}
+                title={isOwn ? 'Your question' : hasUpvoted ? 'Remove upvote' : 'I have this question too'}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
+                {q.upvotes || 0}
+              </button>
+            </div>
+          )
+        })
       )}
 
       <div className="oh-section-head">
