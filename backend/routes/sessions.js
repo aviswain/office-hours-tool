@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import pool from '../db/supabase.js';
+import { clusterQuestions } from '../services/claude.js';
 
 const router = Router();
 
