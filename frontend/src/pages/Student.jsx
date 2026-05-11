@@ -33,6 +33,63 @@ async function extractServerError(res) {
   return trimmed ? `${statusLine} — ${trimmed}` : statusLine
 }
 
+function CheckIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  )
+}
+
+function AlertIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+  )
+}
+
+function SendIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m22 2-7 20-4-9-9-4Z" />
+      <path d="M22 2 11 13" />
+    </svg>
+  )
+}
+
 function Student() {
   const [studentName, setStudentName] = useState('')
   const [questionText, setQuestionText] = useState('')
@@ -129,215 +186,158 @@ function Student() {
     : null
 
   const resolvedQuestions = questions.filter((q) => q.is_resolved)
-
-  const containerStyle = {
-    maxWidth: 640,
-    margin: '0 auto',
-    textAlign: 'left',
-  }
-
-  const inputStyle = {
-    width: '100%',
-    padding: '8px 10px',
-    fontSize: 16,
-    border: '1px solid #ccc',
-    borderRadius: 4,
-    boxSizing: 'border-box',
-    fontFamily: 'inherit',
-  }
-
-  const labelStyle = {
-    display: 'block',
-    marginBottom: 6,
-    fontWeight: 500,
-    color: '#333',
-  }
-
-  const fieldStyle = { marginBottom: 16 }
-
-  const buttonStyle = {
-    padding: '10px 20px',
-    fontSize: 16,
-    background: submitting ? '#c98bff' : '#aa3bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 4,
-    cursor: submitting ? 'not-allowed' : 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 8,
-  }
-
-  const counterStyle = {
-    marginTop: 4,
-    fontSize: 12,
-    color: questionText.length >= MAX_QUESTION_LENGTH ? '#c0392b' : '#777',
-    textAlign: 'right',
-  }
-
-  const errorStyle = {
-    marginTop: 12,
-    color: '#c0392b',
-    fontSize: 14,
-  }
-
-  const sectionHeadingStyle = {
-    fontSize: 20,
-    fontWeight: 600,
-    margin: '32px 0 12px',
-    color: '#333',
-  }
-
-  const confirmationStyle = {
-    border: '1px solid #d6f5d6',
-    background: '#f3fbf3',
-    borderRadius: 6,
-    padding: '16px 20px',
-    marginBottom: 20,
-  }
-
-  const questionIdStyle = {
-    marginTop: 6,
-    fontSize: 12,
-    color: '#888',
-    fontFamily: 'ui-monospace, Consolas, monospace',
-  }
-
-  const statusPanelStyle = {
-    border: '1px solid #e5e4e7',
-    borderRadius: 6,
-    padding: '16px 20px',
-    background: '#fff',
-  }
-
-  const baseBadgeStyle = {
-    display: 'inline-block',
-    padding: '4px 10px',
-    borderRadius: 999,
-    fontSize: 13,
-    fontWeight: 600,
-  }
-
-  const yellowBadgeStyle = {
-    ...baseBadgeStyle,
-    background: '#fff8db',
-    color: '#8a6d00',
-    border: '1px solid #f5d76e',
-  }
-
-  const blueBadgeStyle = {
-    ...baseBadgeStyle,
-    background: '#e6f0ff',
-    color: '#1e4fa3',
-    border: '1px solid #9ec0f4',
-  }
-
-  const greenBadgeStyle = {
-    ...baseBadgeStyle,
-    background: '#e6f7e6',
-    color: '#1d6f1d',
-    border: '1px solid #8fd28f',
-  }
-
-  const answerBlockStyle = {
-    marginTop: 12,
-    padding: '12px 14px',
-    background: '#fafafa',
-    border: '1px solid #eee',
-    borderRadius: 4,
-    whiteSpace: 'pre-wrap',
-  }
-
-  const answeredCardStyle = {
-    border: '1px solid #e5e4e7',
-    borderRadius: 6,
-    padding: '14px 18px',
-    marginBottom: 12,
-    background: '#fff',
-  }
+  const atMaxLength = questionText.length >= MAX_QUESTION_LENGTH
 
   return (
-    <div style={containerStyle}>
-      <h1 style={{ marginTop: 0 }}>Submit Your Question</h1>
+    <div className="oh-container oh-container--narrow">
+      <header className="oh-hero">
+        <div className="oh-hero__copy">
+          <span className="oh-hero__eyebrow">
+            <span aria-hidden="true">✦</span> Live office-hours queue
+          </span>
+          <h1 className="oh-hero__title">Ask a question.</h1>
+          <p className="oh-hero__subtitle">
+            Your TA will see it instantly. Similar questions are grouped together so
+            you get answers faster.
+          </p>
+        </div>
+      </header>
 
       {!submittedQuestionId && (
-        <form onSubmit={handleSubmit} noValidate={false}>
-          <div style={fieldStyle}>
-            <label style={labelStyle} htmlFor="studentName">Name</label>
-            <input
-              id="studentName"
-              type="text"
-              placeholder="Your name"
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-              required
-              disabled={submitting}
-              style={inputStyle}
-            />
-          </div>
-
-          <div style={fieldStyle}>
-            <label style={labelStyle} htmlFor="questionText">Question</label>
-            <textarea
-              id="questionText"
-              placeholder="Type your question here... be specific about what you tried and where you got stuck"
-              value={questionText}
-              onChange={(e) => setQuestionText(e.target.value.slice(0, MAX_QUESTION_LENGTH))}
-              maxLength={MAX_QUESTION_LENGTH}
-              required
-              disabled={submitting}
-              rows={6}
-              style={{ ...inputStyle, resize: 'vertical' }}
-            />
-            <div style={counterStyle}>
-              {questionText.length} / {MAX_QUESTION_LENGTH}
+        <section className="oh-card oh-card--padded oh-fade-up" aria-label="Submit question">
+          <form onSubmit={handleSubmit} noValidate={false}>
+            <div className="oh-field">
+              <label className="oh-label" htmlFor="studentName">
+                Your name
+              </label>
+              <input
+                id="studentName"
+                type="text"
+                className="oh-input"
+                placeholder="e.g. Alex Chen"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                required
+                disabled={submitting}
+                autoComplete="name"
+              />
             </div>
-          </div>
 
-          <button type="submit" disabled={submitting} style={buttonStyle}>
-            {submitting && <span className="oh-spinner" aria-hidden="true" />}
-            <span>{submitting ? 'Submitting…' : 'Submit'}</span>
-          </button>
+            <div className="oh-field">
+              <label className="oh-label" htmlFor="questionText">
+                Your question
+              </label>
+              <textarea
+                id="questionText"
+                className="oh-textarea"
+                placeholder="Be specific about what you tried and where you got stuck…"
+                value={questionText}
+                onChange={(e) =>
+                  setQuestionText(e.target.value.slice(0, MAX_QUESTION_LENGTH))
+                }
+                maxLength={MAX_QUESTION_LENGTH}
+                required
+                disabled={submitting}
+                rows={6}
+              />
+              <div className={`oh-counter${atMaxLength ? ' oh-counter--max' : ''}`}>
+                {questionText.length} / {MAX_QUESTION_LENGTH}
+              </div>
+            </div>
 
-          {errorMessage && (
-            <p role="alert" style={errorStyle}>{errorMessage}</p>
-          )}
-        </form>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="oh-btn oh-btn--primary oh-btn--lg"
+            >
+              {submitting ? (
+                <>
+                  <span className="oh-spinner" aria-hidden="true" />
+                  <span>Submitting…</span>
+                </>
+              ) : (
+                <>
+                  <SendIcon />
+                  <span>Submit question</span>
+                </>
+              )}
+            </button>
+
+            {errorMessage && (
+              <div role="alert" className="oh-alert oh-alert--danger" style={{ marginTop: 16 }}>
+                <span className="oh-alert__icon">
+                  <AlertIcon />
+                </span>
+                <span>{errorMessage}</span>
+              </div>
+            )}
+          </form>
+        </section>
       )}
 
       {submittedQuestionId && (
-        <div>
-          <div style={confirmationStyle}>
-            <p style={{ margin: 0, fontWeight: 500, color: '#1d6f1d' }}>
-              Your question has been submitted.
-            </p>
-            <p style={questionIdStyle}>Question ID: {submittedQuestionId}</p>
+        <div className="oh-fade-up">
+          <div className="oh-confirmation">
+            <span className="oh-confirmation__icon" aria-hidden="true">
+              <CheckIcon size={20} />
+            </span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="oh-confirmation__title">Your question has been submitted</div>
+              <div className="oh-confirmation__id">ID: {submittedQuestionId}</div>
+            </div>
           </div>
 
-          <div style={statusPanelStyle}>
+          <div className="oh-status-panel">
             {!submittedQuestion && (
-              <span style={{ color: '#888', fontSize: 14 }}>Loading status…</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--gray-500)', fontSize: 14 }}>
+                <span className="oh-spinner oh-spinner--accent" aria-hidden="true" />
+                <span>Loading status…</span>
+              </div>
             )}
 
             {submittedQuestion &&
               submittedQuestion.cluster_id == null &&
               !submittedQuestion.is_resolved && (
-                <span style={yellowBadgeStyle}>Waiting to be clustered</span>
+                <div>
+                  <span className="oh-badge oh-badge--warning">
+                    <span className="oh-badge__dot oh-badge__dot--pulse" />
+                    Waiting to be grouped
+                  </span>
+                  <p style={{ marginTop: 12, fontSize: 14, color: 'var(--gray-600)' }}>
+                    Your TA is about to organize the queue — hang tight.
+                  </p>
+                </div>
               )}
 
             {submittedQuestion &&
               submittedQuestion.cluster_id != null &&
               !submittedQuestion.is_resolved && (
-                <span style={blueBadgeStyle}>In queue — TA will answer soon</span>
+                <div>
+                  <span className="oh-badge oh-badge--info">
+                    <span className="oh-badge__dot oh-badge__dot--pulse" />
+                    In queue — TA will answer soon
+                  </span>
+                  <p style={{ marginTop: 12, fontSize: 14, color: 'var(--gray-600)' }}>
+                    We grouped your question with similar ones so everyone gets a faster reply.
+                  </p>
+                </div>
               )}
 
             {submittedQuestion && submittedQuestion.is_resolved && (
               <div>
-                <span style={greenBadgeStyle}>Answered</span>
+                <span className="oh-badge oh-badge--success">
+                  <CheckIcon size={12} />
+                  Answered
+                </span>
                 {submittedCluster?.answer ? (
-                  <div style={answerBlockStyle}>{submittedCluster.answer}</div>
+                  <div className="oh-answer-block" style={{ marginTop: 14 }}>
+                    <span className="oh-answer-block__icon">
+                      <CheckIcon size={16} />
+                    </span>
+                    <span>{submittedCluster.answer}</span>
+                  </div>
                 ) : (
-                  <div style={{ marginTop: 12, color: '#888', fontSize: 14 }}>
+                  <div style={{ marginTop: 12, color: 'var(--gray-500)', fontSize: 14 }}>
                     Loading answer…
                   </div>
                 )}
@@ -347,21 +347,36 @@ function Student() {
         </div>
       )}
 
-      <h2 style={sectionHeadingStyle}>Already Answered — Check Before Submitting</h2>
+      <div className="oh-section-head">
+        <h2 className="oh-section-head__title">Already answered</h2>
+        <span className="oh-section-head__count">{resolvedQuestions.length}</span>
+        <span className="oh-section-head__line" />
+      </div>
+
       {resolvedQuestions.length === 0 ? (
-        <p style={{ color: '#888' }}>No answered questions yet.</p>
+        <div className="oh-empty">
+          <div className="oh-empty__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          No answered questions yet. Check back after your TA responds.
+        </div>
       ) : (
         resolvedQuestions.map((q) => {
           const cluster = clusters.find((c) => c.id === q.cluster_id)
           return (
-            <div key={q.id} style={answeredCardStyle}>
-              <div style={{ fontWeight: 600, color: '#333' }}>
-                {q.question_text}
-              </div>
+            <div key={q.id} className="oh-resolved-card">
+              <div className="oh-resolved-card__question">{q.question_text}</div>
               {cluster?.answer ? (
-                <div style={answerBlockStyle}>{cluster.answer}</div>
+                <div className="oh-answer-block" style={{ marginTop: 12 }}>
+                  <span className="oh-answer-block__icon">
+                    <CheckIcon size={16} />
+                  </span>
+                  <span>{cluster.answer}</span>
+                </div>
               ) : (
-                <div style={{ marginTop: 8, color: '#888', fontSize: 13 }}>
+                <div style={{ marginTop: 8, color: 'var(--gray-500)', fontSize: 13 }}>
                   Answer not yet available.
                 </div>
               )}
