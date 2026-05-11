@@ -362,56 +362,50 @@ function TA() {
   )
 
   const resolvedClusters = clusters.filter((c) => c.is_resolved)
-  const activeClusters = clusters
+  const activeClusters = clusters.filter((c) => !c.is_resolved)
   const showActiveCount = !initialLoading && !fetchError && activeClusters.length > 0
   const showUnclusteredCount = !initialLoading && !fetchError && unclustered.length > 0
   const showResolvedCount = !initialLoading && !fetchError && resolvedClusters.length > 0
 
   return (
     <div className="oh-container">
-      <header className="oh-hero">
-        <div className="oh-hero__copy">
-          <span className="oh-hero__eyebrow">
-            <span aria-hidden="true">⌘</span> Teaching assistant
-          </span>
-          <h1 className="oh-hero__title">TA Dashboard</h1>
-          <p className="oh-hero__subtitle">
-            Review grouped questions, post a single answer, and clear the queue faster
-            than ever.
-          </p>
+      <div className="oh-ta-header">
+        <div>
+          <h1 className="oh-page-header__title">TA Dashboard</h1>
+          <p className="oh-page-header__desc">Group questions with AI, then post one answer for the whole cluster.</p>
         </div>
-        <span className="oh-live-pill" title={`Polling every ${POLL_INTERVAL_MS / 1000}s`}>
-          <span className="oh-live-pill__dot" />
-          Live · updates every {POLL_INTERVAL_MS / 1000}s
-        </span>
-      </header>
-
-      <div className="oh-toolbar">
-        <button
-          type="button"
-          onClick={handleRecluster}
-          disabled={reclustering}
-          className="oh-btn oh-btn--primary"
-        >
-          {reclustering ? (
-            <>
-              <span className="oh-spinner" aria-hidden="true" />
-              <span>AI is grouping questions…</span>
-            </>
-          ) : (
-            <>
-              <SparkleIcon />
-              <span>Re-cluster questions</span>
-            </>
-          )}
-        </button>
-        {reclusterError && (
-          <span role="alert" style={{ color: 'var(--danger-700)', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <AlertIcon size={14} />
-            {reclusterError}
+        <div className="oh-ta-header__actions">
+          <span className="oh-live-pill" title={`Polling every ${POLL_INTERVAL_MS / 1000}s`}>
+            <span className="oh-live-pill__dot" />
+            Live
           </span>
-        )}
+          <button
+            type="button"
+            onClick={handleRecluster}
+            disabled={reclustering}
+            className="oh-btn oh-btn--primary oh-btn--sm"
+          >
+            {reclustering ? (
+              <>
+                <span className="oh-spinner" aria-hidden="true" />
+                <span>Grouping…</span>
+              </>
+            ) : (
+              <>
+                <SparkleIcon size={14} />
+                <span>Re-cluster</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
+
+      {reclusterError && (
+        <div role="alert" className="oh-alert oh-alert--danger" style={{ marginBottom: 20 }}>
+          <span className="oh-alert__icon"><AlertIcon size={14} /></span>
+          <span>{reclusterError}</span>
+        </div>
+      )}
 
       <div className="oh-section-head">
         <h2 className="oh-section-head__title">Active clusters</h2>
@@ -437,18 +431,18 @@ function TA() {
         </div>
       )}
 
-      {!initialLoading && !fetchError && clusters.length === 0 && (
+      {!initialLoading && !fetchError && activeClusters.length === 0 && (
         <div className="oh-empty">
           <div className="oh-empty__icon" aria-hidden="true">
             <SparkleIcon size={18} />
           </div>
-          No clusters yet. Submitted questions will appear here once grouped.
+          No active clusters. Submit questions then hit Re-cluster.
         </div>
       )}
 
       {!initialLoading &&
         !fetchError &&
-        clusters.map((cluster) => {
+        activeClusters.map((cluster) => {
           const state = resolveState[cluster.id] || {}
           const isExpanded = !!expandedClusters[cluster.id]
           const count = cluster.questionCount ?? cluster.questions?.length ?? 0

@@ -1,21 +1,20 @@
 :root {
-  /* Brand — indigo to violet */
-  --brand-50: #eef2ff;
-  --brand-100: #e0e7ff;
-  --brand-200: #c7d2fe;
-  --brand-300: #a5b4fc;
-  --brand-400: #818cf8;
-  --brand-500: #6366f1;
-  --brand-600: #4f46e5;
-  --brand-700: #4338ca;
-  --brand-800: #3730a3;
-  --brand-900: #312e81;
+  /* Brand — slate blue */
+  --brand-50: #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-300: #93c5fd;
+  --brand-400: #60a5fa;
+  --brand-500: #3b82f6;
+  --brand-600: #2563eb;
+  --brand-700: #1d4ed8;
+  --brand-800: #1e40af;
+  --brand-900: #1e3a8a;
 
-  /* Accent — violet */
-  --violet-300: #c4b5fd;
-  --violet-400: #a78bfa;
-  --violet-500: #8b5cf6;
-  --violet-600: #7c3aed;
+  --violet-300: var(--brand-300);
+  --violet-400: var(--brand-400);
+  --violet-500: var(--brand-500);
+  --violet-600: var(--brand-600);
 
   /* Slate gray scale */
   --gray-25: #fcfdff;
@@ -58,7 +57,7 @@
   --danger-700: #b91c1c;
 
   /* Typography */
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
 
   /* Elevation */
@@ -67,7 +66,7 @@
   --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
   --shadow-lg: 0 10px 20px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -4px rgba(15, 23, 42, 0.04);
   --shadow-xl: 0 20px 35px -10px rgba(15, 23, 42, 0.12), 0 8px 14px -6px rgba(15, 23, 42, 0.06);
-  --shadow-brand: 0 10px 26px -8px rgba(79, 70, 229, 0.45);
+  --shadow-brand: 0 10px 26px -8px rgba(37, 99, 235, 0.35);
 
   /* Radii */
   --radius-xs: 4px;
@@ -88,11 +87,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings:
-    'cv02' on,
-    'cv03' on,
-    'cv04' on,
-    'cv11' on;
+  font-feature-settings: 'ss01' on;
 }
 
 * {
@@ -108,13 +103,7 @@ body {
 body {
   min-height: 100vh;
   color: var(--gray-700);
-  background-color: #fcfdff;
-  background-image:
-    radial-gradient(1100px 600px at 8% -10%, rgba(99, 102, 241, 0.12), transparent 55%),
-    radial-gradient(900px 520px at 100% 0%, rgba(139, 92, 246, 0.10), transparent 60%),
-    radial-gradient(900px 700px at 50% 110%, rgba(99, 102, 241, 0.06), transparent 60%),
-    linear-gradient(180deg, #fcfdff 0%, #f5f6fb 100%);
-  background-attachment: fixed;
+  background-color: #f8fafc;
 }
 
 h1,
