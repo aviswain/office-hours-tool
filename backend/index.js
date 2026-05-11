@@ -18,6 +18,7 @@ const limiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'GET',
 });
 app.use('/api/', limiter);
 
