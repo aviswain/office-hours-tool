@@ -1,14 +1,14 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const ClaudeOutputSchema = z.array(
+const ClusterOutputSchema = z.array(
   z.object({
-    label: z.string().max(100),
-    questionIds: z.array(z.string().uuid())
+    label: z.string().min(1).max(100),
+    questionIds: z.array(z.string().uuid()).min(1),
   })
 );
 
@@ -17,7 +17,7 @@ export async function clusterQuestions(questions) {
 
   const prompt = `You are helping a TA organize student questions for office hours.
 
-Here are the student questions (each with an ID):
+Here are the student questions, each with a UUID:
 ${questions.map(q => `ID: ${q.id}\nQuestion: ${q.question_text}`).join('\n\n')}
 
 Group these questions into clusters of similar questions. Each cluster represents one distinct concept or confusion.
@@ -36,32 +36,31 @@ Rules:
 - Labels must be specific, e.g. "Null pointer after function call" not "Pointer issue"
 - Only use IDs that were provided to you — do not invent new ones`;
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1000,
-    messages: [{ role: 'user', content: prompt }]
+  const response = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: prompt,
   });
 
-  const rawText = response.content[0].text.trim();
+  const rawText = response.text.trim();
 
   let parsed;
   try {
-    parsed = JSON.parse(rawText);
+    const clean = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+    parsed = JSON.parse(clean);
   } catch (e) {
-    throw new Error(`Claude returned invalid JSON: ${rawText.substring(0, 200)}`);
+    throw new Error(`Gemini returned invalid JSON: ${rawText.substring(0, 200)}`);
   }
 
-  const validation = ClaudeOutputSchema.safeParse(parsed);
+  const validation = ClusterOutputSchema.safeParse(parsed);
   if (!validation.success) {
-    throw new Error(`Claude returned invalid cluster structure: ${JSON.stringify(validation.error.flatten())}`);
+    throw new Error(`Gemini returned invalid cluster structure: ${JSON.stringify(validation.error.flatten())}`);
   }
 
-  // Strip hallucinated IDs — only keep IDs that actually exist in our questions
   const validIds = new Set(questions.map(q => q.id));
   const safeClusters = validation.data
     .map(cluster => ({
       ...cluster,
-      questionIds: cluster.questionIds.filter(id => validIds.has(id))
+      questionIds: cluster.questionIds.filter(id => validIds.has(id)),
     }))
     .filter(cluster => cluster.questionIds.length > 0);
 
